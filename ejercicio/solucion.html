@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Ejercicio DataTables y Chart.js</title>
+  <link rel="stylesheet" href="../lib/dataTables.dataTables.min.css">
+  <script src="../lib/jquery.min.js"></script>
+  <script src="../lib/dataTables.min.js"></script>
+  <script src="../lib/chart.umd.js"></script>
+</head>
+<body style="font-family: system-ui, Arial, sans-serif; max-width: 800px; margin: 20px auto;">
+
+  <h2>Ejercicio. Tabla y gráfica conectadas</h2>
+  <ol>
+    <li><b>Tarea 1.</b> Haz que la tabla muestre 5 filas por página (y que el 5 aparezca en el selector de filas) y arranque ordenada por total de mayor a menor.</li>
+    <li><b>Tarea 2.</b> Muestra la columna Total en pesos colombianos sin perder el orden numérico.</li>
+    <li><b>Tarea 3.</b> Haz que la gráfica muestre el total por categoría de las filas filtradas y cambie al escribir en el buscador.</li>
+  </ol>
+  <p><i>Pista para la tarea 3. La tabla avisa cada vez que se redibuja con el evento <code>draw</code>.</i></p>
+
+  <div style="height:260px"><canvas id="grafica"></canvas></div>
+  <table id="tabla" class="display" style="width:100%"></table>
+
+<script>
+const datos = [
+  { producto: 'Portátil',  categoria: 'Tecnología', total: 3200000 },
+  { producto: 'Audífonos', categoria: 'Tecnología', total: 180000 },
+  { producto: 'Licuadora', categoria: 'Hogar',      total: 240000 },
+  { producto: 'Lámpara',   categoria: 'Hogar',      total: 95000 },
+  { producto: 'Camiseta',  categoria: 'Ropa',       total: 60000 },
+  { producto: 'Chaqueta',  categoria: 'Ropa',       total: 210000 },
+  { producto: 'Balón',     categoria: 'Deportes',   total: 70000 },
+  { producto: 'Bicicleta', categoria: 'Deportes',   total: 1450000 },
+  { producto: 'Tablet',    categoria: 'Tecnología', total: 980000 },
+  { producto: 'Cojín',     categoria: 'Hogar',      total: 45000 },
+  { producto: 'Zapatos',   categoria: 'Ropa',       total: 320000 },
+  { producto: 'Raqueta',   categoria: 'Deportes',   total: 260000 }
+];
+
+const moneda = new Intl.NumberFormat('es-CO',
+  { style: 'currency', currency: 'COP', maximumFractionDigits: 0 });
+
+const tabla = new DataTable('#tabla', {
+  data: datos,
+  columns: [
+    { data: 'producto',  title: 'Producto' },
+    { data: 'categoria', title: 'Categoría' },
+    // TAREA 2. El formato solo se aplica al mostrar, el orden usa el número crudo
+    { data: 'total', title: 'Total', className: 'dt-right',
+      render: (valor, tipo) => tipo === 'display' ? moneda.format(valor) : valor }
+  ],
+  // TAREA 1
+  pageLength: 5,
+  lengthMenu: [5, 10, 25],      // opciones del selector, incluye el 5
+  order: [[2, 'desc']]          // columna 2 (total), de mayor a menor
+});
+
+const grafica = new Chart(document.getElementById('grafica'), {
+  type: 'bar',
+  data: { labels: [], datasets: [{ label: 'Total por categoría', data: [] }] },
+  options: { maintainAspectRatio: false }
+});
+
+// TAREA 3. Suma por categoría las filas filtradas y actualiza la gráfica
+function refrescar() {
+  const filas = tabla.rows({ search: 'applied' }).data().toArray();
+  const porCategoria = new Map();
+  for (const f of filas) {
+    porCategoria.set(f.categoria, (porCategoria.get(f.categoria) || 0) + f.total);
+  }
+  grafica.data.labels = [...porCategoria.keys()];
+  grafica.data.datasets[0].data = [...porCategoria.values()];
+  grafica.update();
+}
+tabla.on('draw', refrescar);   // cada redibujado de la tabla actualiza la gráfica
+refrescar();                   // y una vez al cargar
+
+</script>
+</body>
+</html>
