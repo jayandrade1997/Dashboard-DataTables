@@ -36,6 +36,25 @@ body {
 .panel-cabecera { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
 .panel h2 { margin: 0; font-size: 1.05rem; }
 
+/* ---------- Tarjetas de resumen ---------- */
+.tarjetas { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px; }
+.tarjeta {
+  background: var(--azul-claro);
+  border: 1px solid var(--azul);
+  border-radius: 10px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.tarjeta-titulo { color: var(--gris); font-size: 0.85rem; }
+.tarjeta strong { font-size: 1.5rem; color: var(--azul); }
+
+/* ---------- Graficas ---------- */
+.graficas { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+/* Altura fija para que Chart.js (responsive) sepa cuanto espacio tiene */
+.caja-grafica { position: relative; height: 300px; width: 100%; }
+
 /* ---------- Filtros ---------- */
 .filtros { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; margin-bottom: 14px; }
 .filtros label { display: flex; flex-direction: column; gap: 4px; font-size: 0.85rem; color: var(--gris); }
@@ -59,6 +78,11 @@ body {
 .etiqueta.anulado { background: #FBDADA; color: #A32020; }
 
 /* ---------- Adaptacion a pantallas pequenas ---------- */
+@media (max-width: 900px) {
+  .tarjetas { grid-template-columns: repeat(2, 1fr); }
+  .graficas { grid-template-columns: 1fr; }
+}
 @media (max-width: 520px) {
+  .tarjetas { grid-template-columns: 1fr; }
   .filtros select, .filtros input { min-width: 120px; }
 }

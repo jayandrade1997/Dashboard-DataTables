@@ -15,10 +15,34 @@
 
   <header class="encabezado">
     <h1>Dashboard de ventas</h1>
-    <p>Ventas simuladas de enero a junio de 2026. Busca, ordena y filtra la tabla.</p>
+    <p>Ventas simuladas de enero a junio de 2026. Filtra la tabla y mira cómo cambian las gráficas.</p>
   </header>
 
   <main class="contenedor">
+
+    <!-- Tarjetas de resumen -->
+    <section class="tarjetas" aria-label="Resumen">
+      <article class="tarjeta"><span class="tarjeta-titulo">Total vendido</span><strong id="kpiTotal">-</strong></article>
+      <article class="tarjeta"><span class="tarjeta-titulo">Pedidos</span><strong id="kpiPedidos">-</strong></article>
+      <article class="tarjeta"><span class="tarjeta-titulo">Ticket promedio</span><strong id="kpiTicket">-</strong></article>
+      <article class="tarjeta"><span class="tarjeta-titulo">Pedidos pagados</span><strong id="kpiPagados">-</strong></article>
+    </section>
+
+    <!-- Graficas -->
+    <section class="graficas" aria-label="Gráficas">
+      <article class="panel">
+        <div class="panel-cabecera">
+          <h2>Ventas por categoría</h2>
+          <button type="button" id="btnTipo" class="boton-secundario">Ver como torta</button>
+        </div>
+        <div class="caja-grafica"><canvas id="gCategorias"></canvas></div>
+      </article>
+
+      <article class="panel">
+        <div class="panel-cabecera"><h2>Ventas por mes</h2></div>
+        <div class="caja-grafica"><canvas id="gMeses"></canvas></div>
+      </article>
+    </section>
 
     <!-- Filtros y tabla -->
     <section class="panel" aria-label="Tabla de ventas">
@@ -42,11 +66,13 @@
   <script src="lib/jquery.min.js"></script>
   <script src="lib/dataTables.min.js"></script>
   <script src="lib/dataTables.responsive.min.js"></script>
+  <script src="lib/chart.umd.js"></script>
 
   <!-- Codigo propio, el orden importa -->
   <script src="js/datos.js"></script>
   <script src="js/utilidades.js"></script>
   <script src="js/tabla.js"></script>
+  <script src="js/graficas.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>
