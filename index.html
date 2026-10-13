@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard de ventas</title>
+
+  <!-- Estilos de las librerias (copia local en lib/) -->
+  <link rel="stylesheet" href="lib/dataTables.dataTables.min.css">
+  <link rel="stylesheet" href="lib/responsive.dataTables.min.css">
+  <!-- Estilos propios, siempre despues de los de las librerias -->
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+
+  <header class="encabezado">
+    <h1>Dashboard de ventas</h1>
+    <p>Ventas simuladas de enero a junio de 2026. Busca, ordena y filtra la tabla.</p>
+  </header>
+
+  <main class="contenedor">
+
+    <!-- Filtros y tabla -->
+    <section class="panel" aria-label="Tabla de ventas">
+      <div class="filtros">
+        <label>Categoría <select id="fCategoria"></select></label>
+        <label>Ciudad <select id="fCiudad"></select></label>
+        <label>Estado <select id="fEstado"></select></label>
+        <label>Desde <input type="date" id="fDesde"></label>
+        <label>Hasta <input type="date" id="fHasta"></label>
+        <button type="button" id="btnLimpiar" class="boton-secundario">Limpiar filtros</button>
+      </div>
+
+      <table id="tabla" class="display nowrap" style="width:100%"></table>
+    </section>
+
+  </main>
+
+  <footer class="pie">Datos simulados con fines académicos.</footer>
+
+  <!-- Librerias (copia local) -->
+  <script src="lib/jquery.min.js"></script>
+  <script src="lib/dataTables.min.js"></script>
+  <script src="lib/dataTables.responsive.min.js"></script>
+
+  <!-- Codigo propio, el orden importa -->
+  <script src="js/datos.js"></script>
+  <script src="js/utilidades.js"></script>
+  <script src="js/tabla.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
