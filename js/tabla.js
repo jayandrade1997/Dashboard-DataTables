@@ -1,6 +1,6 @@
 // js/tabla.js
 // Configuracion de DataTables. Aqui estan la paginacion, el orden, la busqueda,
-// el formato de las celdas y el rango de fechas.
+// el formato de las celdas, el rango de fechas y los botones de exportacion.
 
 // Posicion de cada columna en la tabla (empieza en 0)
 const COL = { id: 0, fecha: 1, cliente: 2, categoria: 3, ciudad: 4, cantidad: 5, total: 6, estado: 7 };
@@ -9,6 +9,22 @@ const COL = { id: 0, fecha: 1, cliente: 2, categoria: 3, ciudad: 4, cantidad: 5,
 const CLASES_ESTADO = { Pagado: 'ok', Pendiente: 'pend', Cancelado: 'anulado' };
 
 function crearTabla() {
+
+  // Opciones comunes de los tres botones de exportacion.
+  // Al personalizar el cuerpo se devuelven los valores crudos en las columnas que
+  // tienen formato (fecha, total y estado), asi el archivo no lleva HTML ni simbolos.
+  const exportar = {
+    columns: [0, 1, 2, 3, 4, 5, 6, 7],
+    format: {
+      body: (dato, fila, columna) => {
+        const registro = tabla.row(fila).data();
+        if (columna === COL.fecha) return registro.fecha;            // AAAA-MM-DD
+        if (columna === COL.total) return String(registro.total);    // numero, sin $
+        if (columna === COL.estado) return registro.estado;          // texto, sin etiqueta
+        return dato;
+      }
+    }
+  };
 
   const tabla = new DataTable('#tabla', {
     data: VENTAS,                       // arreglo de objetos de js/datos.js
@@ -47,9 +63,16 @@ function crearTabla() {
     searchDelay: 200,                   // espera 200 ms despues de escribir
     responsive: true,                   // en pantallas pequenas oculta columnas
 
-    // Donde va cada control
+    // Donde va cada control. Buttons es la extension de exportacion.
     layout: {
-      topStart: null,
+      topStart: {
+        buttons: [
+          { extend: 'csv',   text: 'CSV',   filename: 'ventas', exportOptions: exportar },
+          { extend: 'excel', text: 'Excel', filename: 'ventas', title: 'Ventas 2026', exportOptions: exportar },
+          { extend: 'pdf',   text: 'PDF',   filename: 'ventas', title: 'Ventas 2026',
+            orientation: 'landscape', exportOptions: exportar }
+        ]
+      },
       topEnd: 'search',
       bottomStart: ['pageLength', 'info'],
       bottomEnd: 'paging'
